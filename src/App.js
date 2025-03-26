@@ -3,13 +3,12 @@ import React, { useState } from 'react';
 import axios from 'axios';
 function App() {
   const [successRate, setSuccessRate] = useState(0);
-  const [grade, setGrade] = useState(0);
+  const [grade, setGrade] = useState('');
   const [employed, setEmployed] = useState(false);
   const getSuccess = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/predict?grade=${grade}&employed=${employed}`);
-      console.log(response);
-      setSuccessRate(response.data.predictedSuccessRate);
+      const response = await axios.get(`http://localhost:5000/predict?grade=${grade || 0}&employed=${employed}`);
+      setSuccessRate(response.data.probability);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -17,19 +16,20 @@ function App() {
   
   return (
     <div className="App">
-      <h1>Student Graduation Rate Prediction</h1>
+      <h1>Student Graduation Probability Prediction</h1>
       
       <div className="form-group">
-        <label htmlFor="grade">Student Grade (0-100)</label>
+        <label htmlFor="grade">Student GPA (0-4)</label>
         <input
           id="grade"
           className="grade-input"
           type="number"
-          placeholder="Enter grade"
+          placeholder="Enter GPA (e.g. 3.5)"
           min={0}
-          max={100}
+          max={4}
+          step="0.1"
           value={grade}
-          onChange={(e) => setGrade(parseInt(e.target.value) || 0)}
+          onChange={(e) => setGrade(e.target.value === '' ? '' : parseFloat(e.target.value))}
         />
       </div>
 
@@ -60,12 +60,12 @@ function App() {
       </div>
 
       <button className="predict-button" onClick={getSuccess}>
-        Predict Graduation Rate
+        Predict Graduation Probability
       </button>
 
       <div className="result">
-        <div className="result-label">Predicted Graduation Rate</div>
-        <div className="result-value">{successRate}%</div>
+        <div className="result-value">{successRate}% </div>
+        <div className="result-label">Probability that the student will graduate</div>
       </div>
     </div>
     );
