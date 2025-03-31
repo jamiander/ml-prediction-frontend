@@ -5,10 +5,15 @@ function App() {
   const [successRate, setSuccessRate] = useState(0);
   const [grade, setGrade] = useState('');
   const [employed, setEmployed] = useState(false);
+  console.log('employed', employed);
+  const [married, setMarried] = useState(false);
+  console.log('married', married);
+  const [age, setAge] = useState('');
   const getSuccess = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/predict?grade=${grade || 0}&employed=${employed}`);
-      setSuccessRate(response.data.probability);
+      const response = await axios.get(`http://localhost:5000/predict?grade=${grade || 0}&employed=${employed}&married=${married}&age=${age}`);
+      console.log('response', response);
+      setSuccessRate(response.data.graduationProbability);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -19,10 +24,10 @@ function App() {
       <h1>Student Graduation Probability Prediction</h1>
       
       <div className="form-group">
-        <label htmlFor="grade">Student GPA (0-4)</label>
+        <label htmlFor="grade">Student GPA</label>
         <input
           id="grade"
-          className="grade-input"
+          className="form-input"
           type="number"
           placeholder="Enter GPA (e.g. 3.5)"
           min={0}
@@ -32,17 +37,31 @@ function App() {
           onChange={(e) => setGrade(e.target.value === '' ? '' : parseFloat(e.target.value))}
         />
       </div>
+      <div className="form-group">
+        <label htmlFor="age">Student Age</label>
+        <input
+          id="age"
+          className="form-input"
+          type="number"
+          placeholder="Enter Age (e.g. 18)"
+          min={18}
+          max={40}
+          step="1"
+          value={age}
+          onChange={(e) => setAge(e.target.value === '' ? '' : parseFloat(e.target.value))}
+        />
+      </div>
 
       <div className="form-group">
         <label>Employment Status</label>
-        <div className="employment-status">
+        <div className="radio-group">
           <label className="radio-label">
             <input
               type="radio"
               name="employment"
               value="false"
               checked={!employed}
-              onChange={(e) => setEmployed(e.target.value === 'true')}
+              onChange={() => setEmployed(false)}
             />
             Not Employed
           </label>
@@ -52,9 +71,34 @@ function App() {
               name="employment"
               value="true"
               checked={employed}
-              onChange={(e) => setEmployed(e.target.value === 'true')}
+              onChange={() => setEmployed(true)}
             />
             Employed
+          </label>
+        </div>
+      </div>
+      <div className="form-group">
+        <label>Marital Status</label>
+        <div className="radio-group">
+          <label className="radio-label">
+            <input
+              type="radio"
+              name="maritalStatus"
+              value="false"
+              checked={!married}
+              onChange={() => setMarried(false)}
+            />
+            Not Married
+          </label>
+          <label className="radio-label">
+            <input
+              type="radio"
+              name="maritalStatus"
+              value="true"
+              checked={married}
+              onChange={() => setMarried(true)}
+            />
+            Married
           </label>
         </div>
       </div>
@@ -64,7 +108,7 @@ function App() {
       </button>
 
       <div className="result">
-        <div className="result-value">{successRate}% </div>
+        <div className="result-value">{(successRate * 100).toFixed(1)}%</div>
         <div className="result-label">Probability that the student will graduate</div>
       </div>
     </div>

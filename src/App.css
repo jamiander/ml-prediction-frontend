@@ -25,7 +25,7 @@ h1 {
   font-weight: 500;
 }
 
-.grade-input {
+.form-input {
   width: 100%;
   padding: 0.75rem;
   border: 2px solid #e2e8f0;
@@ -34,12 +34,12 @@ h1 {
   transition: border-color 0.2s;
 }
 
-.grade-input:focus {
+.form-input:focus {
   outline: none;
   border-color: #3498db;
 }
 
-.employment-status {
+.radio-group {
   display: flex;
   gap: 2rem;
   margin-bottom: 1.5rem;
@@ -49,11 +49,20 @@ h1 {
   display: flex;
   align-items: center;
   cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.radio-label:hover {
+  background-color: #f8fafc;
 }
 
 .radio-label input[type="radio"] {
-  margin-right: 0.5rem;
+  margin-right: 0.75rem;
   cursor: pointer;
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
 .predict-button {
